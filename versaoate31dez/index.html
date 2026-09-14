@@ -148,6 +148,14 @@ h1,h2,h3{font-family:Fraunces,Georgia,serif;font-weight:400;margin:0;text-wrap:b
     <button class="cta" id="done">Marcar como feita</button>
     <div class="lock"><div class="eyebrow" style="color:var(--ouro)" id="dleftBox"></div><b>Se o ano não está terminando como você tinha planejado, ainda dá tempo.</b><span id="lockTxt"></span> <a href="#" data-go="s-desp">Quero a próxima imersão →</a></div>
     </div>
+    <div id="lockview" class="im" hidden>
+      <div class="daynav"><button id="prev3" aria-label="dia anterior">‹</button><div class="n"><span id="lkN"></span> <small id="lkDate"></small></div><button id="next3" aria-label="próximo dia">›</button></div>
+      <div class="eyebrow" style="color:var(--ouro)">Ainda não</div>
+      <div class="big">Isso se abre <span id="lkWhen"></span>.</div>
+      <p>Uma afirmação por dia, no dia. Não é pra ler tudo de uma vez: o cérebro aprende por repetição, e a repetição precisa de tempo. Volte amanhã.</p>
+      <p class="m">Hoje é o seu dia <b id="lkToday"></b>. Faça a prática de hoje e marque como feita.</p>
+      <a class="cta" style="display:block;text-align:center;text-decoration:none" href="#" id="lkBack">Voltar para hoje</a>
+    </div>
     <div id="imview" class="im" hidden>
       <div class="daynav"><button id="prev2" aria-label="dia anterior">‹</button><div class="n"><small id="imDate"></small></div><button id="next2" aria-label="próximo dia">›</button></div>
       <div class="eyebrow" style="color:var(--ouro)">Hoje não tem afirmação</div>
@@ -239,7 +247,8 @@ function render(){
   document.getElementById("streak").textContent=streakAt(todayDay);
   document.getElementById("trkName").textContent=tr.name;
   const [ly,ld]=daysLeft();document.getElementById("dleftBox").textContent=ly===2026?`2026 só tem mais ${ld} dias`:`${ly} ainda tem ${ld} dias`;
-  document.getElementById("dayview").hidden=!!sl.im;document.getElementById("imview").hidden=!sl.im;
+  const fut=cur>slotToday();document.getElementById("lockview").hidden=!fut;document.getElementById("dayview").hidden=fut||!!sl.im;document.getElementById("imview").hidden=fut||!sl.im;
+  if(fut){const diff=cur-slotToday();document.getElementById("lkN").textContent=sl.im?"Imersão":"Dia "+sl.day;document.getElementById("lkDate").textContent=fmtD(sl.dt);document.getElementById("lkWhen").textContent=diff===1?"amanhã":"em "+diff+" dias";document.getElementById("lkToday").textContent=todayDay;document.getElementById("au").pause()}
   const au=document.getElementById("au");
   if(sl.im){document.getElementById("imDate").textContent=fmtD(sl.dt)+" · "+(cur===10?"sábado":"domingo");au.pause()}
   else{
@@ -256,20 +265,20 @@ function render(){
   }
   document.getElementById("trkTitle").textContent=tr.name;document.getElementById("trkDesc").textContent=tr.desc;
   const g=document.getElementById("grid");g.innerHTML="";
-  SLOTS.forEach((s2,i)=>{const e=document.createElement("div");if(s2.im){e.textContent="☼";e.style.color="var(--ouro)"}else{e.textContent=s2.day;if(state.done[s2.day])e.className="d"}if(i===cur)e.classList.add("t");e.onclick=()=>{cur=i;render();go("s-hoje")};g.appendChild(e)});
+  SLOTS.forEach((s2,i)=>{const e=document.createElement("div");if(s2.im){e.textContent="☼";e.style.color="var(--ouro)"}else{e.textContent=s2.day;if(state.done[s2.day])e.className="d"}if(i>slotToday()){e.style.opacity=".35";e.title="Libera no dia"}if(i===cur)e.classList.add("t");e.onclick=()=>{cur=i;render();go("s-hoje")};g.appendChild(e)});
   document.getElementById("vDone").textContent=totalDone();document.getElementById("vBest").textContent=state.best;document.getElementById("vLeft").textContent=90-totalDone();
   const bs=document.getElementById("badges");bs.innerHTML="";BADGES.forEach((b,i)=>{const e=document.createElement("div");e.className="badge"+(badgeWon(i)?" won":"");e.innerHTML=`<i>${b[0]}</i><b>${b[1]}</b><span>${b[2]}</span>`;bs.appendChild(e)});
 }
 document.querySelectorAll("#ov .opt button").forEach(b=>b.onclick=()=>{state.track=b.dataset.t;save();render();toast("Trilha escolhida. Dia 1 é seu.")});
 const pick=()=>{document.getElementById("ov").hidden=false;go("s-hoje")};
 document.getElementById("trkChange").onclick=pick;document.getElementById("trkChange2").onclick=pick;
-document.getElementById("done").onclick=()=>{const d=SLOTS[cur].day;if(!d)return;
+document.getElementById("done").onclick=()=>{const d=SLOTS[cur].day;if(!d||cur>slotToday())return;
   if(state.done[d]){delete state.done[d]}else{state.done[d]=1;const s=streakAt(d);if(s>state.best)state.best=s;
     const msgs={1:"Primeira prática. Você começou.",3:"3 dias. Seu cérebro já percebeu.",7:"7 dias. Uma semana sem se abandonar.",21:"21 dias. Isso agora é hábito.",90:"90 dias. Você fechou o ano como dona de si."};
     toast(msgs[s]||["Feita. Mais uma prova.","Você não se abandonou hoje.","Pequena vitória registrada.","Dona de si, um dia por vez."][d%4])}
   save();render()};
 const prev=()=>{if(cur>0){cur--;render()}},next=()=>{if(cur<89){cur++;render()}};
-document.getElementById("prev").onclick=prev;document.getElementById("next").onclick=next;document.getElementById("prev2").onclick=prev;document.getElementById("next2").onclick=next;
+document.getElementById("prev").onclick=prev;document.getElementById("next").onclick=next;document.getElementById("prev2").onclick=prev;document.getElementById("next2").onclick=next;document.getElementById("prev3").onclick=prev;document.getElementById("next3").onclick=next;document.getElementById("lkBack").onclick=e=>{e.preventDefault();cur=slotToday();render()};
 document.getElementById("lermais").onclick=function(){const m=document.getElementById("exM");m.hidden=!m.hidden;this.textContent=m.hidden?"Ler mais":"Ler menos"};
 function go(id){document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("on",s.id===id));document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("on",t.dataset.go===id))}
 document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",e=>{e.preventDefault();go(b.dataset.go)}));
