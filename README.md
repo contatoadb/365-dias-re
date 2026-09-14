@@ -30,3 +30,7 @@ Publicado hoje em https://365-dias-re.vercel.app (Vercel, deploy da raiz).
 - Liberar acesso via webhook do checkout
 - Gravar áudios para os dias que hoje são só texto
 - Trocar o ícone provisório pelo logo oficial
+
+## Versão pública v1: `15-dias/`
+
+Trilha de 15 dias (16/09 a 02/10/2026, com 26 e 27 reservados para a imersão). Ao entrar, a pessoa escolhe o foco: Dinheiro, Propósito e sucesso profissional, Relacionamento ou Saúde física e emocional. Cada trilha reaproveita afirmações, práticas e áudios da versão de 365 dias. Publicada em https://15-dias-re.vercel.app.
