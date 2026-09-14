@@ -48,3 +48,7 @@ Trilha de 15 dias (16/09 a 02/10/2026, com 26 e 27 reservados para a imersão). 
 ## Versão até 31/12: `versaoate31dez/`
 
 Continuação de 3 de outubro a 31 de dezembro de 2026 (90 dias), também com escolha de trilha. Publicada em https://versao-c-re.vercel.app.
+
+## Trava por data do servidor
+
+As versões `versao15dias` e `versaoate31dez` só liberam o conteúdo do dia. Para não depender do relógio do celular, cada uma tem uma função serverless em `api/today.js` que devolve a data no fuso de São Paulo; o app usa essa data para decidir o que está aberto (com fallback para o relógio local se a API não responder). Na Vercel isso funciona sem configuração. Para travar também a leitura do código-fonte (o conteúdo dos dias seguintes está no HTML), o próximo passo é servir o conteúdo do dia pela API com login (ver Próximos passos).
