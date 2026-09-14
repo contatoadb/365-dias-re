@@ -34,3 +34,7 @@ Publicado hoje em https://365-dias-re.vercel.app (Vercel, deploy da raiz).
 ## Versão pública v1: `15-dias/`
 
 Trilha de 15 dias (16/09 a 02/10/2026, com 26 e 27 reservados para a imersão). Ao entrar, a pessoa escolhe o foco: Dinheiro, Propósito e sucesso profissional, Relacionamento ou Saúde física e emocional. Cada trilha reaproveita afirmações, práticas e áudios da versão de 365 dias. Publicada em https://15-dias-re.vercel.app.
+
+## Versão C: `versao-c/`
+
+Continuação de 3 de outubro a 31 de dezembro de 2026 (90 dias), também com escolha de trilha. Publicada em https://versao-c-re.vercel.app.
